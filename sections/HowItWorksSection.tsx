@@ -67,14 +67,14 @@ export default function HowItWorksSection() {
 
         {/* Steps row */}
         <AnimatedSection>
-          <div style={{ position: 'relative', display: 'flex', alignItems: 'flex-start', justifyContent: 'center', gap: 0 }}>
+          <div className="steps-container" style={{ position: 'relative', display: 'flex', justifyContent: 'center', gap: 0 }}>
 
             {steps.map((s, i) => {
               const Icon    = s.icon;
               const isActive = active === i;
 
               return (
-                <div key={s.title} style={{ display: 'flex', alignItems: 'flex-start', flex: 1 }}>
+                <div key={s.title} className="step-item" style={{ display: 'flex', flex: 1 }}>
 
                   {/* ── Step column ── */}
                   <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flex: 1, padding: '0 8px' }}>
@@ -151,18 +151,18 @@ export default function HowItWorksSection() {
 
                   {/* ── Connector line (between steps) ── */}
                   {i < steps.length - 1 && (
-                    <div style={{
-                      flexShrink: 0, width: 80, marginTop: 44, position: 'relative', height: 2,
-                    }} className="step-connector">
+                    <div className="step-connector" style={{
+                      flexShrink: 0, position: 'relative',
+                    }}>
                       {/* Base track */}
                       <div style={{ position: 'absolute', inset: 0, background: '#e2e8f0', borderRadius: 2 }} />
 
                       {/* Traveling pulse fill */}
                       <div style={{
                         position: 'absolute', inset: 0, borderRadius: 2,
-                        background: `linear-gradient(90deg, ${steps[i].color}, ${steps[i + 1].color})`,
-                        transformOrigin: 'left center',
-                        transform: lineGo.includes(i) ? 'scaleX(1)' : 'scaleX(0)',
+                        background: `linear-gradient(var(--grad-dir, 90deg), ${steps[i].color}, ${steps[i + 1].color})`,
+                        transformOrigin: 'var(--trans-origin, left center)',
+                        transform: lineGo.includes(i) ? 'var(--scale-full, scaleX(1))' : 'var(--scale-zero, scaleX(0))',
                         transition: lineGo.includes(i)
                           ? `transform ${LINE_TRAVEL}ms cubic-bezier(0.4,0,0.2,1)`
                           : 'transform 0.15s ease',
@@ -171,11 +171,12 @@ export default function HowItWorksSection() {
                       {/* Moving dot on the line */}
                       {lineGo.includes(i) && (
                         <div style={{
-                          position: 'absolute', top: '50%', left: 0,
-                          width: 10, height: 10, borderRadius: '50%', marginTop: -5,
+                          position: 'absolute', top: 'var(--dot-top, 50%)', left: 'var(--dot-left, 0)',
+                          width: 10, height: 10, borderRadius: '50%', 
+                          marginTop: 'var(--dot-mt, -5px)', marginLeft: 'var(--dot-ml, 0)',
                           background: `linear-gradient(135deg, ${steps[i].color}, ${steps[i + 1].color})`,
                           boxShadow: `0 0 10px ${steps[i + 1].color}80`,
-                          animation: `travelDot ${LINE_TRAVEL}ms cubic-bezier(0.4,0,0.2,1) forwards`,
+                          animation: `var(--dot-anim, travelDot) ${LINE_TRAVEL}ms cubic-bezier(0.4,0,0.2,1) forwards`,
                         }} />
                       )}
                     </div>
@@ -188,6 +189,10 @@ export default function HowItWorksSection() {
       </div>
 
       <style>{`
+        .steps-container { flex-direction: row; align-items: flex-start; }
+        .step-item { flex-direction: row; align-items: flex-start; }
+        .step-connector { width: 80px; height: 2px; margin-top: 44px; margin-left: 0; }
+        
         @keyframes pulseRing {
           0%   { transform: scale(1);   opacity: 0.8; }
           100% { transform: scale(1.6); opacity: 0;   }
@@ -196,8 +201,29 @@ export default function HowItWorksSection() {
           0%   { left: 0%; }
           100% { left: calc(100% - 10px); }
         }
-        @media (max-width: 700px) {
-          .step-connector { display: none !important; }
+        @keyframes travelDotVertical {
+          0%   { top: 0%; }
+          100% { top: calc(100% - 10px); }
+        }
+        
+        @media (max-width: 768px) {
+          .steps-container { flex-direction: column !important; align-items: center !important; gap: 20px !important; }
+          .step-item { flex-direction: column !important; align-items: center !important; width: 100%; }
+          .step-connector { 
+            width: 2px !important; 
+            height: 50px !important; 
+            margin-top: 10px !important; 
+            margin-bottom: 10px !important;
+            --grad-dir: 180deg;
+            --trans-origin: top center;
+            --scale-full: scaleY(1);
+            --scale-zero: scaleY(0);
+            --dot-top: 0;
+            --dot-left: 50%;
+            --dot-mt: 0;
+            --dot-ml: -5px;
+            --dot-anim: travelDotVertical;
+          }
         }
       `}</style>
     </section>
