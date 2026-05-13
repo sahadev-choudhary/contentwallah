@@ -36,7 +36,7 @@ export default function HeroSection() {
       {floatingCards.map(({ icon: Icon, label, color, delay, ...pos }) => (
         <motion.div
           key={label}
-          className="animate-float"
+          className="floating-card animate-float"
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: delay + 0.8, duration: 0.5 }}
@@ -50,7 +50,6 @@ export default function HeroSection() {
             fontSize: '0.85rem', fontWeight: 700, color: '#0f172a',
             pointerEvents: 'none',
           }}
-          className="floating-card animate-float"
         >
           <Icon size={15} style={{ color }} />
           {label}
