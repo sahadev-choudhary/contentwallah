@@ -3,15 +3,9 @@
 import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { Mesh } from 'three';
-import ExperienceCanvas from '@/components/experience/ExperienceCanvas';
-import SceneChaos from '@/components/experience/SceneChaos';
-import SceneAI from '@/components/experience/SceneAI';
-import SceneEngine from '@/components/experience/SceneEngine';
-import SceneGrowth from '@/components/experience/SceneGrowth';
-import SceneFinal from '@/components/experience/SceneFinal';
+import SequenceCanvas from '@/components/experience/SequenceCanvas';
+import ScrollOverlay from '@/components/experience/ScrollOverlay';
 
-// Register GSAP ScrollTrigger
 if (typeof window !== 'undefined') {
   gsap.registerPlugin(ScrollTrigger);
 }
@@ -19,67 +13,65 @@ if (typeof window !== 'undefined') {
 export default function ExperiencePage() {
   const containerRef = useRef<HTMLDivElement>(null);
   
-  // Proxy state for GSAP to animate, avoiding async R3F ref issues
-  const orbState = useRef({ scale: 0, y: -2, x: 0, z: 0 });
+  // Proxy state that GSAP will mutate, and the Canvas will read
+  const frameProxy = useRef({ frame: 1 });
   
-  // Scene Refs
+  // Scene Refs for the HTML text overlays
   const scene1Ref = useRef<HTMLDivElement>(null);
   const scene2Ref = useRef<HTMLDivElement>(null);
   const scene3Ref = useRef<HTMLDivElement>(null);
   const scene4Ref = useRef<HTMLDivElement>(null);
-  const scene5Ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!containerRef.current) return;
 
     let ctx = gsap.context(() => {
+      // Main timeline pinned to the container
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: containerRef.current,
           start: 'top top',
-          end: '+=6000',
-          scrub: 1,
+          end: '+=8000', // Massive scroll area for a smooth cinematic feel
+          scrub: 0.5,    // 0.5s smoothing on the scrub so the frames glide
           pin: true,
           anticipatePin: 1,
         }
       });
 
-      // ---- INITIAL STATE ----
-      orbState.current = { scale: 0, y: -2, x: 0, z: 0 };
+      // 1. Core Sequence Tween
+      // Animate frame from 1 to 192 over a 192 unit duration.
+      // This maps HTML animation absolute timings exactly to frame numbers!
+      tl.to(frameProxy.current, {
+        frame: 192,
+        snap: 'frame', // Snap to whole numbers for discrete frame loading
+        ease: 'none',
+        duration: 192
+      }, 0);
 
-      // ---- SCENE 1: Chaos (0 to 1) ----
-      tl.addLabel('scene1')
-        .to('.chaos-card', { y: -50, autoAlpha: 0, rotation: 0, duration: 1, stagger: 0.1, ease: 'power2.inOut' })
-        .to('.chaos-text', { autoAlpha: 0, y: -30, duration: 1, ease: 'power2.inOut' }, '<0.5')
-        
-      // ---- SCENE 2: AI Activation (1 to 2) ----
-        .addLabel('scene2')
-        .to(scene2Ref.current, { autoAlpha: 1, visibility: 'visible', duration: 1 }, 'scene2')
-        .to(orbState.current, { scale: 1, y: 0, x: 0, z: 0, duration: 1.5, ease: 'power2.out' }, 'scene2')
-        .to('.ai-text', { scale: 1.05, duration: 2, ease: 'none' }, 'scene2')
-        
-      // ---- SCENE 3: Content Engine (3 to 4) ----
-        .addLabel('scene3', '+=1')
-        .to(scene2Ref.current, { autoAlpha: 0, duration: 1 }, 'scene3')
-        .to(orbState.current, { scale: 0.5, y: 1.5, x: 0, z: 0, duration: 1 }, 'scene3')
-        .to(scene3Ref.current, { autoAlpha: 1, visibility: 'visible', duration: 1 }, 'scene3+=0.5')
-        .from('.engine-card', { y: 80, autoAlpha: 0, duration: 1, stagger: 0.15, ease: 'back.out(1.5)' }, 'scene3+=0.5')
-        
-      // ---- SCENE 4: Viral Growth (5 to 6) ----
-        .addLabel('scene4', '+=1')
-        .to(scene3Ref.current, { autoAlpha: 0, y: -50, duration: 1 }, 'scene4')
-        .to(orbState.current, { x: 3, y: 0, z: 0, duration: 1 }, 'scene4')
-        .to(scene4Ref.current, { autoAlpha: 1, visibility: 'visible', duration: 1 }, 'scene4+=0.5')
-        .from('.growth-stat', { scale: 0.8, autoAlpha: 0, duration: 1, stagger: 0.2, ease: 'power3.out' }, 'scene4+=0.5')
-        
-      // ---- SCENE 5: Final Ecosystem (7 to 8) ----
-        .addLabel('scene5', '+=1')
-        .to(scene4Ref.current, { autoAlpha: 0, duration: 1 }, 'scene5')
-        .to(orbState.current, { x: 0, y: 0, z: 0, scale: 4, duration: 1.5, ease: 'power2.inOut' }, 'scene5')
-        .to(scene5Ref.current, { autoAlpha: 1, visibility: 'visible', duration: 1 }, 'scene5+=0.5')
-        .from('.final-logo', { y: 30, autoAlpha: 0, duration: 1 }, 'scene5+=1')
-        .from('.final-title', { y: 30, autoAlpha: 0, duration: 1 }, 'scene5+=1.2')
-        .from('.final-cta', { y: 30, autoAlpha: 0, duration: 1 }, 'scene5+=1.4');
+      // 2. HTML Text Orchestration
+      // Total frames = 192. Time in this timeline corresponds exactly to the frame number.
+      
+      // SCENE 1: "Still struggling to grow?"
+      // Starts visible, fades out around frame 35
+      tl.to(scene1Ref.current, { autoAlpha: 0, y: -40, duration: 15, ease: 'power2.inOut' }, 20);
+
+      // SCENE 2: "AI changes everything"
+      // Fades in at frame 50, fades out at 85
+      tl.to(scene2Ref.current, { autoAlpha: 1, visibility: 'visible', duration: 15, ease: 'power2.out' }, 50)
+        .fromTo('.overlay-text', { scale: 0.95 }, { scale: 1.05, duration: 35, ease: 'none' }, 50) // Slow push in
+        .to(scene2Ref.current, { autoAlpha: 0, y: -40, duration: 15, ease: 'power2.in' }, 80);
+
+      // SCENE 3: "Create Faster. Grow Smarter."
+      // Fades in at frame 110, fades out at 145
+      tl.to(scene3Ref.current, { autoAlpha: 1, visibility: 'visible', duration: 15, ease: 'power2.out' }, 110)
+        .to(scene3Ref.current, { autoAlpha: 0, y: -40, duration: 15, ease: 'power2.in' }, 140);
+
+      // SCENE 4: "The AI Creator Growth System"
+      // Fades in at frame 165, stays to the end (frame 192)
+      tl.to(scene4Ref.current, { autoAlpha: 1, visibility: 'visible', duration: 15, ease: 'power2.out' }, 165)
+        .fromTo('.final-logo', { y: 20 }, { y: 0, duration: 10, ease: 'power2.out' }, 165)
+        .fromTo('.final-title', { y: 20 }, { y: 0, duration: 10, ease: 'power2.out' }, 168)
+        .fromTo('.final-cta', { y: 20, scale: 0.9 }, { y: 0, scale: 1, duration: 10, ease: 'back.out(1.5)' }, 172);
 
     }, containerRef);
 
@@ -87,17 +79,21 @@ export default function ExperiencePage() {
   }, []);
 
   return (
-    <div style={{ background: '#fafbff', minHeight: '100vh', width: '100%' }}>
-      {/* 3D Background Canvas */}
-      <ExperienceCanvas orbState={orbState} />
-      
+    <div style={{ background: '#ffffff', minHeight: '100vh', width: '100%' }}>
       {/* Scrollable Container (Pinned by GSAP) */}
       <div ref={containerRef} style={{ height: '100vh', width: '100%', position: 'relative', overflow: 'hidden', zIndex: 10 }}>
-        <SceneChaos refObj={scene1Ref} />
-        <SceneAI refObj={scene2Ref} />
-        <SceneEngine refObj={scene3Ref} />
-        <SceneGrowth refObj={scene4Ref} />
-        <SceneFinal refObj={scene5Ref} />
+        
+        {/* Render Engine for WebP Sequence */}
+        <SequenceCanvas frameProxy={frameProxy} />
+        
+        {/* DOM Text Overlays */}
+        <ScrollOverlay 
+          scene1Ref={scene1Ref}
+          scene2Ref={scene2Ref}
+          scene3Ref={scene3Ref}
+          scene4Ref={scene4Ref}
+        />
+
       </div>
     </div>
   );
