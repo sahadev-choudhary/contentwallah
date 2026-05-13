@@ -6,7 +6,7 @@ const floatingCards = [
   { icon: TrendingUp, label: '+340% Views',      color: '#7c3aed', delay: 0,   top: '22%',  left:  '4%'  },
   { icon: Flame,      label: 'Viral Hook',        color: '#f59e0b', delay: 0.4, top: '32%',  right: '5%'  },
   { icon: Users,      label: '10K Followers',     color: '#10b981', delay: 0.8, bottom: '28%', left: '6%' },
-  { icon: Star,       label: '5.0 Rating',        color: '#3b82f6', delay: 1.2, bottom: '22%', right: '6%' },
+  { icon: Star,       label: '5.0 Rating',        color: '#3b82f6', delay: 1.2, bottom: '36%', right: '6%' },
 ];
 
 export default function HeroSection() {
@@ -32,11 +32,10 @@ export default function HeroSection() {
         bottom: -80, left: -80, pointerEvents: 'none',
       }} />
 
-      {/* Floating cards — desktop only */}
-      {floatingCards.map(({ icon: Icon, label, color, delay, ...pos }) => (
+      {/* Floating cards */}
+      {floatingCards.map(({ icon: Icon, label, color, delay, ...pos }, i) => (
         <motion.div
           key={label}
-          className="floating-card animate-float"
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: delay + 0.8, duration: 0.5 }}
@@ -50,6 +49,7 @@ export default function HeroSection() {
             fontSize: '0.85rem', fontWeight: 700, color: '#0f172a',
             pointerEvents: 'none',
           }}
+          className={`floating-card card-${i} animate-float`}
         >
           <Icon size={15} style={{ color }} />
           {label}
@@ -70,8 +70,7 @@ export default function HeroSection() {
               borderRadius: 50, padding: '7px 18px',
               fontSize: '0.82rem', fontWeight: 600, color: '#7c3aed',
             }}>
-              <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#7c3aed', animation: 'pulse-glow 2s infinite' }} />
-              Trusted by 10,000+ Creators
+              A Helpverse Initiative
             </div>
           </motion.div>
 
@@ -135,7 +134,19 @@ export default function HeroSection() {
 
       <style>{`
         @media (max-width: 768px) {
-          .floating-card { display: none !important; }
+          .floating-card {
+            padding: 6px 10px !important;
+            font-size: 0.7rem !important;
+            border-radius: 10px !important;
+          }
+          .floating-card svg {
+            width: 12px !important;
+            height: 12px !important;
+          }
+          .card-0 { top: 8% !important; left: 3% !important; }
+          .card-1 { top: 18% !important; right: 3% !important; left: auto !important; }
+          .card-2 { bottom: 20% !important; left: 3% !important; top: auto !important; }
+          .card-3 { bottom: 12% !important; right: 3% !important; left: auto !important; top: auto !important; }
         }
       `}</style>
     </section>
