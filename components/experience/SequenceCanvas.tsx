@@ -64,34 +64,20 @@ export default function SequenceCanvas({ frameProxy }: { frameProxy: React.Mutab
         
         let drawWidth, drawHeight, offsetX, offsetY;
         
-        // On mobile, use "contain" logic to show the whole dashboard without cropping the edges
-        const isMobile = window.innerWidth < 768;
-
-        if (isMobile) {
-          if (canvasRatio > imgRatio) {
-            drawHeight = canvas.height;
-            drawWidth = canvas.height * imgRatio;
-            offsetX = (canvas.width - drawWidth) / 2;
-            offsetY = 0;
-          } else {
-            drawWidth = canvas.width;
-            drawHeight = canvas.width / imgRatio;
-            offsetX = 0;
-            offsetY = (canvas.height - drawHeight) / 2;
-          }
+        // We always use "cover" logic to fill the screen (no black borders)
+        if (canvasRatio > imgRatio) {
+          drawWidth = canvas.width;
+          drawHeight = canvas.width / imgRatio;
+          offsetX = 0;
+          offsetY = (canvas.height - drawHeight) / 2;
         } else {
-          // On desktop, use "cover" logic to fill the screen
-          if (canvasRatio > imgRatio) {
-            drawWidth = canvas.width;
-            drawHeight = canvas.width / imgRatio;
-            offsetX = 0;
-            offsetY = (canvas.height - drawHeight) / 2;
-          } else {
-            drawWidth = canvas.height * imgRatio;
-            drawHeight = canvas.height;
-            offsetX = (canvas.width - drawWidth) / 2;
-            offsetY = 0;
-          }
+          drawWidth = canvas.height * imgRatio;
+          drawHeight = canvas.height;
+          // On mobile portrait, center-cropping often cuts off the main left-side dashboard action.
+          // By shifting offsetX, we reveal more of the left/center action.
+          const isMobile = window.innerWidth < 768;
+          offsetX = isMobile ? -drawWidth * 0.1 : (canvas.width - drawWidth) / 2;
+          offsetY = 0;
         }
 
         ctx.imageSmoothingEnabled = true;
@@ -109,9 +95,8 @@ export default function SequenceCanvas({ frameProxy }: { frameProxy: React.Mutab
       canvas.style.width = `${window.innerWidth}px`;
       canvas.style.height = `${window.innerHeight}px`;
       
-      ctx.scale(dpr, dpr);
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
+      // DONT OVERWRITE canvas.width/height back to innerWidth! That causes massive blurriness.
+      // We do all math in renderFrame using the high-res physical pixels.
       
       renderFrame();
     };

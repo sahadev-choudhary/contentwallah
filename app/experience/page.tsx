@@ -79,7 +79,7 @@ export default function ExperiencePage() {
   }, []);
 
   return (
-    <div style={{ background: '#000000', minHeight: '100vh', width: '100%' }}>
+    <div style={{ background: '#ffffff', minHeight: '100vh', width: '100%' }}>
       {/* Scrollable Container (Pinned by GSAP) */}
       <div ref={containerRef} style={{ height: '100vh', width: '100%', position: 'relative', overflow: 'hidden', zIndex: 10 }}>
         
