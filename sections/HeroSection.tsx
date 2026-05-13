@@ -33,7 +33,8 @@ export default function HeroSection() {
       }} />
 
       {/* Floating cards */}
-      {floatingCards.map(({ icon: Icon, label, color, delay, ...pos }, i) => (
+      <div className="floating-cards-container">
+        {floatingCards.map(({ icon: Icon, label, color, delay, ...pos }, i) => (
         <motion.div
           key={label}
           initial={{ opacity: 0, scale: 0.8 }}
@@ -54,7 +55,8 @@ export default function HeroSection() {
           <Icon size={15} style={{ color }} />
           {label}
         </motion.div>
-      ))}
+        ))}
+      </div>
 
       {/* Main content */}
       <div style={{ maxWidth: 1280, margin: '0 auto', padding: '80px 24px', width: '100%', position: 'relative', zIndex: 2 }}>
@@ -134,19 +136,34 @@ export default function HeroSection() {
 
       <style>{`
         @media (max-width: 768px) {
+          .floating-cards-container {
+            position: absolute;
+            bottom: 40px;
+            left: 0;
+            width: 100%;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            padding: 0 16px;
+            z-index: 10;
+          }
           .floating-card {
-            padding: 6px 10px !important;
-            font-size: 0.7rem !important;
-            border-radius: 10px !important;
+            position: relative !important;
+            top: auto !important;
+            bottom: auto !important;
+            left: auto !important;
+            right: auto !important;
+            padding: 8px 14px !important;
+            font-size: 0.75rem !important;
+            border-radius: 12px !important;
+            background: rgba(255,255,255,0.95) !important;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08) !important;
           }
           .floating-card svg {
-            width: 12px !important;
-            height: 12px !important;
+            width: 14px !important;
+            height: 14px !important;
           }
-          .card-0 { top: 8% !important; left: 3% !important; }
-          .card-1 { top: 18% !important; right: 3% !important; left: auto !important; }
-          .card-2 { bottom: 20% !important; left: 3% !important; top: auto !important; }
-          .card-3 { bottom: 12% !important; right: 3% !important; left: auto !important; top: auto !important; }
         }
       `}</style>
     </section>
