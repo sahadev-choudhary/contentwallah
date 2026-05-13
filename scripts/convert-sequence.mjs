@@ -21,7 +21,7 @@ async function convertAll() {
     const outputPath = path.join(outputDir, file.replace('.png', '.webp'));
     
     await sharp(inputPath)
-      .webp({ quality: 75, effort: 4 }) // Optimized for size & speed
+      .webp({ quality: 95, effort: 6 }) // Maximize quality to look exactly like PNG
       .toFile(outputPath);
   }
   console.log(`Conversion complete! Converted ${files.length} frames.`);

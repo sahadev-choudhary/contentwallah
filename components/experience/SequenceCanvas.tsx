@@ -63,17 +63,35 @@ export default function SequenceCanvas({ frameProxy }: { frameProxy: React.Mutab
         const imgRatio = img.naturalWidth / img.naturalHeight;
         
         let drawWidth, drawHeight, offsetX, offsetY;
+        
+        // On mobile, use "contain" logic to show the whole dashboard without cropping the edges
+        const isMobile = window.innerWidth < 768;
 
-        if (canvasRatio > imgRatio) {
-          drawWidth = canvas.width;
-          drawHeight = canvas.width / imgRatio;
-          offsetX = 0;
-          offsetY = (canvas.height - drawHeight) / 2;
+        if (isMobile) {
+          if (canvasRatio > imgRatio) {
+            drawHeight = canvas.height;
+            drawWidth = canvas.height * imgRatio;
+            offsetX = (canvas.width - drawWidth) / 2;
+            offsetY = 0;
+          } else {
+            drawWidth = canvas.width;
+            drawHeight = canvas.width / imgRatio;
+            offsetX = 0;
+            offsetY = (canvas.height - drawHeight) / 2;
+          }
         } else {
-          drawWidth = canvas.height * imgRatio;
-          drawHeight = canvas.height;
-          offsetX = (canvas.width - drawWidth) / 2;
-          offsetY = 0;
+          // On desktop, use "cover" logic to fill the screen
+          if (canvasRatio > imgRatio) {
+            drawWidth = canvas.width;
+            drawHeight = canvas.width / imgRatio;
+            offsetX = 0;
+            offsetY = (canvas.height - drawHeight) / 2;
+          } else {
+            drawWidth = canvas.height * imgRatio;
+            drawHeight = canvas.height;
+            offsetX = (canvas.width - drawWidth) / 2;
+            offsetY = 0;
+          }
         }
 
         ctx.imageSmoothingEnabled = true;

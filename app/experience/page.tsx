@@ -31,8 +31,8 @@ export default function ExperiencePage() {
         scrollTrigger: {
           trigger: containerRef.current,
           start: 'top top',
-          end: '+=8000', // Massive scroll area for a smooth cinematic feel
-          scrub: 0.5,    // 0.5s smoothing on the scrub so the frames glide
+          end: '+=5000', // Reduced scroll distance to make progression faster and smoother
+          scrub: 1,      // Buttery smooth scrubbing (1 second catch-up time)
           pin: true,
           anticipatePin: 1,
         }
@@ -49,29 +49,29 @@ export default function ExperiencePage() {
       }, 0);
 
       // 2. HTML Text Orchestration
-      // Total frames = 192. Time in this timeline corresponds exactly to the frame number.
+      // Timeline length = 192, effectively making the timing synonymous with the PNG frame number.
       
       // SCENE 1: "Still struggling to grow?"
-      // Starts visible, fades out around frame 35
-      tl.to(scene1Ref.current, { autoAlpha: 0, y: -40, duration: 15, ease: 'power2.inOut' }, 20);
+      // Starts visible, fades out around frame 30
+      tl.to(scene1Ref.current, { autoAlpha: 0, y: -40, duration: 10, ease: 'power2.inOut' }, 20);
 
       // SCENE 2: "AI changes everything"
-      // Fades in at frame 50, fades out at 85
-      tl.to(scene2Ref.current, { autoAlpha: 1, visibility: 'visible', duration: 15, ease: 'power2.out' }, 50)
-        .fromTo('.overlay-text', { scale: 0.95 }, { scale: 1.05, duration: 35, ease: 'none' }, 50) // Slow push in
+      // Fades in at frame 40, fades out at 80 (closing the gap)
+      tl.to(scene2Ref.current, { autoAlpha: 1, visibility: 'visible', duration: 15, ease: 'power2.out' }, 40)
+        .fromTo('.overlay-text', { scale: 0.95 }, { scale: 1.05, duration: 40, ease: 'none' }, 40) 
         .to(scene2Ref.current, { autoAlpha: 0, y: -40, duration: 15, ease: 'power2.in' }, 80);
 
       // SCENE 3: "Create Faster. Grow Smarter."
-      // Fades in at frame 110, fades out at 145
-      tl.to(scene3Ref.current, { autoAlpha: 1, visibility: 'visible', duration: 15, ease: 'power2.out' }, 110)
-        .to(scene3Ref.current, { autoAlpha: 0, y: -40, duration: 15, ease: 'power2.in' }, 140);
+      // Fades in at frame 90, fades out at 135
+      tl.to(scene3Ref.current, { autoAlpha: 1, visibility: 'visible', duration: 15, ease: 'power2.out' }, 90)
+        .to(scene3Ref.current, { autoAlpha: 0, y: -40, duration: 15, ease: 'power2.in' }, 135);
 
       // SCENE 4: "The AI Creator Growth System"
-      // Fades in at frame 165, stays to the end (frame 192)
-      tl.to(scene4Ref.current, { autoAlpha: 1, visibility: 'visible', duration: 15, ease: 'power2.out' }, 165)
-        .fromTo('.final-logo', { y: 20 }, { y: 0, duration: 10, ease: 'power2.out' }, 165)
-        .fromTo('.final-title', { y: 20 }, { y: 0, duration: 10, ease: 'power2.out' }, 168)
-        .fromTo('.final-cta', { y: 20, scale: 0.9 }, { y: 0, scale: 1, duration: 10, ease: 'back.out(1.5)' }, 172);
+      // Fades in at frame 150, stays to the end (frame 192)
+      tl.to(scene4Ref.current, { autoAlpha: 1, visibility: 'visible', duration: 15, ease: 'power2.out' }, 150)
+        .fromTo('.final-logo', { y: 20 }, { y: 0, duration: 10, ease: 'power2.out' }, 150)
+        .fromTo('.final-title', { y: 20 }, { y: 0, duration: 10, ease: 'power2.out' }, 153)
+        .fromTo('.final-cta', { y: 20, scale: 0.9 }, { y: 0, scale: 1, duration: 10, ease: 'back.out(1.5)' }, 158);
 
     }, containerRef);
 
@@ -79,7 +79,7 @@ export default function ExperiencePage() {
   }, []);
 
   return (
-    <div style={{ background: '#ffffff', minHeight: '100vh', width: '100%' }}>
+    <div style={{ background: '#000000', minHeight: '100vh', width: '100%' }}>
       {/* Scrollable Container (Pinned by GSAP) */}
       <div ref={containerRef} style={{ height: '100vh', width: '100%', position: 'relative', overflow: 'hidden', zIndex: 10 }}>
         
