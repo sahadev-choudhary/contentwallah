@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <!-- Background gradient -->
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%"   stop-color="#9b20f0"/>
+      <stop offset="50%"  stop-color="#6c35e8"/>
+      <stop offset="100%" stop-color="#16b8f3"/>
+    </linearGradient>
+    <!-- Subtle inner highlight -->
+    <linearGradient id="shine" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%"   stop-color="#ffffff" stop-opacity="0.2"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Rounded square background -->
+  <rect width="100" height="100" rx="22" ry="22" fill="url(#bg)"/>
+  <!-- Inner shine -->
+  <rect width="100" height="100" rx="22" ry="22" fill="url(#shine)"/>
+
+  <!--
+    ── C shape ──────────────────────────────────────
+    Center (36, 50), outerR=22, innerR=13
+    Gap on right ~45° each side
+    45°: cos=0.707, sin=0.707
+
+    Outer top-right : 36+22*0.707, 50-22*0.707 = 51.6, 34.4
+    Outer bot-right : 36+22*0.707, 50+22*0.707 = 51.6, 65.6
+    Inner top-right : 36+13*0.707, 50-13*0.707 = 45.2, 40.8
+    Inner bot-right : 36+13*0.707, 50+13*0.707 = 45.2, 59.2
+  -->
+  <path
+    d="M 51.6 34.4 A 22 22 0 1 0 51.6 65.6 L 45.2 59.2 A 13 13 0 1 1 45.2 40.8 Z"
+    fill="#ffffff"
+    opacity="0.95"
+  />
+
+  <!--
+    ── W shape ──────────────────────────────────────
+    Sits right of C, x from 47 to 83, y from 29 to 71
+    3 pillars, 2 V-dips, bold style, width ~8px each pillar
+  -->
+  <path
+    d="
+      M 47 29 L 55 29
+      L 62 59 L 69 41 L 76 59 L 83 29
+      L 91 29 L 81 71 L 72 71 L 69 57 L 66 71 L 57 71
+      Z
+    "
+    fill="#ffffff"
+    opacity="0.95"
+  />
+</svg>

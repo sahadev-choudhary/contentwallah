@@ -13,6 +13,13 @@ export const metadata: Metadata = {
   description: 'AI-powered creator growth ecosystem. Viral hooks, scripts, templates, and systems to grow faster on Instagram, YouTube, and beyond.',
   keywords: ['content creator', 'AI prompts', 'viral hooks', 'reel scripts', 'creator tools', 'ContentWallah'],
   authors: [{ name: 'ContentWallah' }],
+  icons: {
+    icon: [
+      { url: '/icon.svg', type: 'image/svg+xml' },
+    ],
+    shortcut: '/icon.svg',
+    apple: '/icon.svg',
+  },
   openGraph: {
     type: 'website',
     siteName: 'ContentWallah',
