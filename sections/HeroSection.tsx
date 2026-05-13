@@ -59,7 +59,7 @@ export default function HeroSection() {
       </div>
 
       {/* Main content */}
-      <div style={{ maxWidth: 1280, margin: '0 auto', padding: '80px 24px', width: '100%', position: 'relative', zIndex: 2 }}>
+      <div className="main-content-wrapper" style={{ maxWidth: 1280, margin: '0 auto', padding: '80px 24px', width: '100%', position: 'relative', zIndex: 2 }}>
         <div style={{ maxWidth: 800, margin: '0 auto', textAlign: 'center' }}>
 
           {/* Badge */}
@@ -136,9 +136,13 @@ export default function HeroSection() {
 
       <style>{`
         @media (max-width: 768px) {
+          .main-content-wrapper {
+            padding-top: 200px !important;
+          }
           .floating-cards-container {
             position: absolute;
-            bottom: 40px;
+            top: 90px;
+            bottom: auto;
             left: 0;
             width: 100%;
             display: flex;
