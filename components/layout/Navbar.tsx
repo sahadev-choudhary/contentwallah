@@ -1,8 +1,9 @@
 'use client';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useCart } from '@/context/CartContext';
-import { ShoppingCart, Menu, X, Zap } from 'lucide-react';
+import { ShoppingCart, Menu, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const navLinks = [
@@ -36,18 +37,15 @@ export default function Navbar() {
         <div style={{ maxWidth: 1280, margin: '0 auto', padding: '0 24px', height: 68, display: 'flex', alignItems: 'center', gap: 40 }}>
 
           {/* Logo */}
-          <Link href="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0 }}>
-            <div style={{
-              width: 34, height: 34, borderRadius: 10,
-              background: 'linear-gradient(135deg, #7c3aed, #3b82f6)',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              boxShadow: '0 4px 12px rgba(124,58,237,0.3)',
-            }}>
-              <Zap size={18} color="#fff" strokeWidth={2.5} />
-            </div>
-            <span style={{ fontWeight: 800, fontSize: '1.1rem', color: '#0f172a', letterSpacing: '-0.02em' }}>
-              Content<span style={{ color: '#7c3aed' }}>Wallah</span>
-            </span>
+          <Link href="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', flexShrink: 0 }}>
+            <Image
+              src="/logo.svg"
+              alt="ContentWallah"
+              width={160}
+              height={44}
+              priority
+              style={{ objectFit: 'contain', height: 44, width: 'auto' }}
+            />
           </Link>
 
           {/* Desktop nav */}

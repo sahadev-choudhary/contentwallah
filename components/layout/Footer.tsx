@@ -1,5 +1,6 @@
 import Link from 'next/link';
-import { Zap, Camera, Play, Share2, Send } from 'lucide-react';
+import Image from 'next/image';
+import { Camera, Play, Share2, Send } from 'lucide-react';
 import { PRODUCT_LIST } from '@/data/products';
 
 export default function Footer() {
@@ -13,17 +14,14 @@ export default function Footer() {
 
           {/* Brand */}
           <div style={{ gridColumn: 'span 1' }}>
-            <Link href="/" style={{ textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 10, marginBottom: 16 }}>
-              <div style={{
-                width: 34, height: 34, borderRadius: 10,
-                background: 'linear-gradient(135deg, #7c3aed, #3b82f6)',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-              }}>
-                <Zap size={18} color="#fff" strokeWidth={2.5} />
-              </div>
-              <span style={{ fontWeight: 800, fontSize: '1.1rem', color: '#fff' }}>
-                Content<span style={{ color: '#a78bfa' }}>Wallah</span>
-              </span>
+            <Link href="/" style={{ textDecoration: 'none', display: 'inline-flex', alignItems: 'center', marginBottom: 16 }}>
+              <Image
+                src="/logo-white.svg"
+                alt="ContentWallah"
+                width={180}
+                height={50}
+                style={{ objectFit: 'contain', height: 50, width: 'auto' }}
+              />
             </Link>
             <p style={{ fontSize: '0.88rem', lineHeight: 1.7, marginBottom: 24, maxWidth: 240 }}>
               The AI Creator Growth System for the modern content economy. A Helpverse Initiative.

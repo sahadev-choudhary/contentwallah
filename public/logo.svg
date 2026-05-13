@@ -1,0 +1,99 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 310" fill="none">
+  <defs>
+    <linearGradient id="g1" x1="0" y1="0" x2="480" y2="0" gradientUnits="userSpaceOnUse">
+      <stop offset="0%"   stop-color="#cc40f5"/>
+      <stop offset="28%"  stop-color="#8b3ded"/>
+      <stop offset="65%"  stop-color="#4f6ef0"/>
+      <stop offset="100%" stop-color="#18d4f0"/>
+    </linearGradient>
+    <linearGradient id="g2" x1="0" y1="0" x2="480" y2="0" gradientUnits="userSpaceOnUse">
+      <stop offset="0%"   stop-color="#e879f9" stop-opacity="0.55"/>
+      <stop offset="50%"  stop-color="#c4b5fd" stop-opacity="0.40"/>
+      <stop offset="100%" stop-color="#67e8f9" stop-opacity="0.50"/>
+    </linearGradient>
+  </defs>
+
+  <!--
+    ── C SHAPE ──────────────────────────────────────────────
+    Donut arc, center=(162,128), outerR=108, innerR=63
+    Gap on the right: arc from ~40° to ~320° (gap 40°-wide each side)
+    40° → cos=0.766, sin=0.643
+    320°→ cos=0.766, sin=-0.643
+
+    Outer start (320°): 162+108*0.766, 128+108*(-0.643) = 244.7, 58.6
+    Outer end   (40°):  162+108*0.766, 128+108*0.643   = 244.7, 197.4
+
+    Inner start (40°):  162+63*0.766,  128+63*0.643    = 210.3, 168.5
+    Inner end  (320°):  162+63*0.766,  128+63*(-0.643) = 210.3, 87.5
+  -->
+
+  <!-- C outer+inner ring path -->
+  <path d="
+    M 244.7 58.6
+    A 108 108 0 1 0 244.7 197.4
+    L 210.3 168.5
+    A 63 63 0 1 1 210.3 87.5
+    Z
+  " fill="url(#g1)"/>
+
+  <!-- C shine overlay -->
+  <path d="
+    M 244.7 58.6
+    A 108 108 0 1 0 244.7 197.4
+    L 210.3 168.5
+    A 63 63 0 1 1 210.3 87.5
+    Z
+  " fill="url(#g2)" opacity="0.45"/>
+
+  <!--
+    ── W SHAPE ──────────────────────────────────────────────
+    Bold angular W, overlapping C on the left side
+    Left edge x≈220, right edge x≈450
+    Top y=55, bottom y=235
+    Width of each pillar ≈38px
+  -->
+  <path d="
+    M 218 55
+    L 258 55
+    L 295 185
+    L 332 100
+    L 369 185
+    L 406 55
+    L 448 55
+    L 406 235
+    L 353 235
+    L 332 165
+    L 311 235
+    L 258 235
+    Z
+  " fill="url(#g1)"/>
+
+  <!-- W shine overlay -->
+  <path d="
+    M 218 55
+    L 258 55
+    L 295 185
+    L 332 100
+    L 369 185
+    L 406 55
+    L 448 55
+    L 406 235
+    L 353 235
+    L 332 165
+    L 311 235
+    L 258 235
+    Z
+  " fill="url(#g2)" opacity="0.4"/>
+
+  <!-- ContentWallah wordmark -->
+  <text
+    x="240"
+    y="290"
+    text-anchor="middle"
+    font-family="'Arial Black', 'Arial Bold', Arial, sans-serif"
+    font-weight="900"
+    font-size="46"
+    fill="#111111"
+    letter-spacing="-0.5"
+  >ContentWallah</text>
+</svg>
