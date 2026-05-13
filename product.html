@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title id="pageTitle">Product — ContentWala</title>
+<meta name="description" content="Premium digital creator tools by ContentWala.">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="inner-page">
+
+<nav class="navbar scrolled" id="navbar">
+  <div class="nav-inner">
+    <a href="index.html" class="logo">
+      <div class="logo-icon">⚡</div>
+      <span class="logo-text">Content<span class="grad">Wala</span></span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="index.html#products">Products</a></li>
+      <li><a href="index.html#how">How It Works</a></li>
+      <li><a href="index.html#testimonials">Results</a></li>
+    </ul>
+    <a href="cart.html" class="cart-nav-btn" id="cartNavBtn">🛒 <span id="cartCount">0</span></a>
+    <a href="index.html#products" class="btn-nav">All Products →</a>
+    <button class="hamburger" id="hamburger">☰</button>
+  </div>
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="index.html">Home</a>
+    <a href="index.html#products">Products</a>
+    <a href="cart.html">🛒 Cart (<span id="cartCountMobile">0</span>)</a>
+  </div>
+</nav>
+
+<div class="container">
+  <div class="breadcrumb" id="breadcrumb">
+    <a href="index.html">Home</a> › <a href="index.html#products">Products</a> › <span id="breadProduct">Loading...</span>
+  </div>
+
+  <div class="product-layout">
+    <!-- LEFT: Product Details -->
+    <div class="product-main" id="productMain">
+      <div id="loadingState" style="text-align:center;padding:60px 0;">
+        <div style="font-size:2rem;margin-bottom:12px;">⚡</div>
+        <p style="color:var(--gray);">Loading product...</p>
+      </div>
+    </div>
+
+    <!-- RIGHT: Buy Card -->
+    <div class="product-sticky">
+      <div class="product-buy-card" id="buyCard" style="display:none;">
+        <div class="product-price">
+          <span class="price-old" id="buyOldPrice"></span>
+          <span class="price-new" id="buyNewPrice"></span>
+          <span class="discount-pill" id="buyDiscount"></span>
+        </div>
+        <div class="instant-badge" style="margin-bottom:16px;">⚡ Instant Digital Delivery</div>
+        <div class="buy-btns">
+          <button class="btn-primary btn-buy-now glow-btn" id="buyNowBtn">Buy Now — Pay Securely ⚡</button>
+          <button class="btn-ghost btn-add-cart" id="addToCartBtn">🛒 Add to Cart</button>
+        </div>
+        <div class="buy-trust">
+          <span>✅ Instant delivery to your email</span>
+          <span>🔒 100% secure payment</span>
+          <span>📱 Works on any device</span>
+          <span>♾️ Lifetime access included</span>
+          <span>🔄 Free future updates</span>
+        </div>
+
+        <div style="margin-top:20px;padding-top:20px;border-top:1px solid var(--border);">
+          <div style="font-size:0.82rem;color:var(--gray);margin-bottom:10px;font-weight:600;">What's inside:</div>
+          <ul id="buyIncludes" style="list-style:none;display:flex;flex-direction:column;gap:8px;"></ul>
+        </div>
+      </div>
+
+      <!-- Related Products -->
+      <div style="margin-top:20px;" id="relatedSection"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Toast Notification -->
+<div id="toast" style="position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(20px);background:linear-gradient(135deg,#7c3aed,#3b82f6);color:#fff;padding:14px 24px;border-radius:50px;font-weight:700;font-size:0.9rem;opacity:0;transition:all 0.3s;z-index:9999;pointer-events:none;white-space:nowrap;"></div>
+
+<footer class="footer" style="margin-top:80px;">
+  <div class="container">
+    <div class="footer-bottom" style="border-top:1px solid var(--border);padding-top:24px;text-align:center;color:var(--gray);font-size:0.85rem;">
+      <p>© 2025 ContentWala. All rights reserved. | <a href="index.html" style="color:var(--purple-light);">Home</a> | <a href="cart.html" style="color:var(--purple-light);">Cart</a></p>
+    </div>
+  </div>
+</footer>
+
+<script src="products-data.js"></script>
+<script>
+const params = new URLSearchParams(window.location.search);
+const productId = params.get('id');
+const product = PRODUCTS[productId];
+
+function updateCartUI() {
+  const c = Cart.count();
+  document.getElementById('cartCount').textContent = c;
+  document.getElementById('cartCountMobile').textContent = c;
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.style.opacity = '1';
+  t.style.transform = 'translateX(-50%) translateY(0)';
+  setTimeout(() => { t.style.opacity = '0'; t.style.transform = 'translateX(-50%) translateY(20px)'; }, 2500);
+}
+
+if (!product) {
+  document.getElementById('productMain').innerHTML = `
+    <div style="text-align:center;padding:80px 0;">
+      <div style="font-size:3rem;margin-bottom:16px;">😕</div>
+      <h2 style="font-size:1.5rem;font-weight:700;margin-bottom:8px;">Product Not Found</h2>
+      <p style="color:var(--gray);margin-bottom:24px;">The product you're looking for doesn't exist.</p>
+      <a href="index.html#products" class="btn-primary">Browse All Products →</a>
+    </div>`;
+} else {
+  document.title = product.name + ' — ContentWala';
+  document.getElementById('breadProduct').textContent = product.name;
+
+  const discount = Math.round((1 - product.price / product.oldPrice) * 100);
+
+  document.getElementById('productMain').innerHTML = `
+    <div class="product-page-badge">${product.badge}</div>
+    <h1 class="product-page-title">${product.icon} ${product.name}</h1>
+    <p class="product-page-tagline">${product.tagline}</p>
+    <p style="color:var(--gray);line-height:1.8;margin-bottom:32px;">${product.description}</p>
+
+    <h2 style="font-size:1.3rem;font-weight:800;margin-bottom:20px;">What You Get</h2>
+    <div class="product-features-grid">
+      ${product.features.map(f => `
+        <div class="feature-item">
+          <div class="f-icon">${f.icon}</div>
+          <h4>${f.title}</h4>
+          <p>${f.desc}</p>
+        </div>`).join('')}
+    </div>
+
+    <div class="product-includes">
+      <h3>📦 Everything Included</h3>
+      <ul>${product.includes.map(i => `<li>${i}</li>`).join('')}</ul>
+    </div>
+
+    <div class="product-testi">
+      <div class="testi-stars">★★★★★</div>
+      <p>${product.testimonial.text}</p>
+      <div class="t-author">
+        <strong>${product.testimonial.author}</strong>
+        <span>${product.testimonial.role}</span>
+      </div>
+    </div>
+  `;
+
+  document.getElementById('buyCard').style.display = 'block';
+  document.getElementById('loadingState').style.display = 'none';
+  document.getElementById('buyOldPrice').textContent = '₹' + product.oldPrice.toLocaleString('en-IN');
+  document.getElementById('buyNewPrice').textContent = '₹' + product.price.toLocaleString('en-IN');
+  document.getElementById('buyDiscount').textContent = discount + '% OFF';
+  document.getElementById('buyIncludes').innerHTML = product.includes.map(i =>
+    `<li style="font-size:0.82rem;color:var(--gray);display:flex;gap:6px;"><span style="color:#10b981;">✓</span>${i}</li>`
+  ).join('');
+
+  document.getElementById('buyNowBtn').addEventListener('click', () => {
+    Cart.add(product.id);
+    updateCartUI();
+    window.location.href = 'checkout.html';
+  });
+
+  document.getElementById('addToCartBtn').addEventListener('click', function() {
+    Cart.add(product.id);
+    updateCartUI();
+    this.textContent = '✓ Added to Cart!';
+    this.style.background = 'rgba(16,185,129,0.2)';
+    this.style.borderColor = '#10b981';
+    this.style.color = '#10b981';
+    showToast('🛒 Added to cart! ' + product.name);
+    setTimeout(() => {
+      this.textContent = '🛒 Add to Cart';
+      this.style.background = '';
+      this.style.borderColor = '';
+      this.style.color = '';
+    }, 2000);
+  });
+
+  // Related products
+  const others = Object.values(PRODUCTS).filter(p => p.id !== product.id).slice(0, 2);
+  document.getElementById('relatedSection').innerHTML = `
+    <div style="font-size:0.82rem;font-weight:700;color:var(--gray);letter-spacing:2px;margin-bottom:12px;">YOU MIGHT ALSO LIKE</div>
+    ${others.map(p => `
+      <a href="product.html?id=${p.id}" style="display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:10px;text-decoration:none;transition:all 0.2s;" onmouseover="this.style.borderColor='rgba(124,58,237,0.5)'" onmouseout="this.style.borderColor='var(--border)'">
+        <span style="font-size:1.8rem;">${p.icon}</span>
+        <div style="flex:1;">
+          <div style="font-size:0.85rem;font-weight:700;color:#fff;">${p.name}</div>
+          <div style="font-size:0.8rem;color:var(--purple-light);font-weight:700;">₹${p.price.toLocaleString('en-IN')}</div>
+        </div>
+        <span style="color:var(--gray);">→</span>
+      </a>`).join('')}
+  `;
+}
+
+// Hamburger
+document.getElementById('hamburger').addEventListener('click', () => {
+  document.getElementById('mobileMenu').classList.toggle('open');
+});
+
+updateCartUI();
+window.addEventListener('cartUpdated', updateCartUI);
+
+// Navbar scroll
+window.addEventListener('scroll', () => {
+  document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 10);
+});
+</script>
+</body>
+</html>
