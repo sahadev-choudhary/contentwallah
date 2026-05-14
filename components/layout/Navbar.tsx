@@ -5,12 +5,14 @@ import Image from 'next/image';
 import { useCart } from '@/context/CartContext';
 import { ShoppingCart, Menu, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { GlassButton } from '@/components/ui/GlassButton';
 
 const navLinks = [
-  { href: '/#products',  label: 'Products' },
-  { href: '/#how',       label: 'How It Works' },
-  { href: '/#results',   label: 'Results' },
-  { href: '/about',      label: 'About' },
+  { href: '/',         label: 'Home' },
+  { href: '/products', label: 'Products' },
+  { href: '/about',    label: 'About' },
+  { href: '/reviews',  label: 'Reviews' },
+  { href: '/contact',  label: 'Contact' },
 ];
 
 export default function Navbar() {
@@ -26,118 +28,104 @@ export default function Navbar() {
 
   return (
     <>
-      <header style={{
-        position: 'fixed', top: 0, left: 0, right: 0, zIndex: 1000,
-        background: scrolled ? 'rgba(255,255,255,0.92)' : 'rgba(255,255,255,0.75)',
-        backdropFilter: 'blur(20px)',
-        borderBottom: scrolled ? '1px solid rgba(0,0,0,0.07)' : '1px solid transparent',
-        boxShadow: scrolled ? '0 2px 20px rgba(0,0,0,0.06)' : 'none',
-        transition: 'all 0.3s ease',
-      }}>
-        <div style={{ maxWidth: 1280, margin: '0 auto', padding: '0 24px', height: 68, display: 'flex', alignItems: 'center', gap: 40 }}>
-
+      <motion.header 
+        initial={{ y: -100 }}
+        animate={{ y: 0 }}
+        transition={{ type: "spring", stiffness: 300, damping: 30 }}
+        className="fixed top-0 left-0 right-0 z-50 px-4 py-3 sm:px-6 sm:py-4 transition-all duration-300"
+        style={{ pointerEvents: 'none' }}
+      >
+        <div 
+          className={`mx-auto max-w-5xl rounded-2xl flex items-center justify-between px-6 py-3 transition-all duration-500 glass-panel ${scrolled ? 'scale-95' : 'scale-100'}`}
+          style={{ pointerEvents: 'auto' }}
+        >
           {/* Logo */}
-          <Link href="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', flexShrink: 0 }}>
+          <Link href="/" className="flex items-center flex-shrink-0 relative z-10">
             <Image
               src="/logo.svg"
               alt="ContentWallah"
-              width={160}
-              height={44}
+              width={140}
+              height={36}
               priority
-              style={{ objectFit: 'contain', height: 44, width: 'auto' }}
+              className="h-8 w-auto object-contain"
             />
           </Link>
 
           {/* Desktop nav */}
-          <nav style={{ display: 'flex', gap: 4, margin: '0 auto' }} className="nav-desktop">
+          <nav className="hidden md:flex items-center gap-1 mx-auto absolute left-1/2 -translate-x-1/2">
             {navLinks.map(({ href, label }) => (
-              <a key={href} href={href} style={{
-                padding: '7px 14px', borderRadius: 8, fontSize: '0.9rem', fontWeight: 500,
-                color: '#475569', textDecoration: 'none', transition: 'all 0.2s',
-              }}
-                onMouseEnter={e => { e.currentTarget.style.color = '#7c3aed'; e.currentTarget.style.background = 'rgba(124,58,237,0.06)'; }}
-                onMouseLeave={e => { e.currentTarget.style.color = '#475569'; e.currentTarget.style.background = 'transparent'; }}>
-                {label}
-              </a>
+              <Link key={href} href={href} className="relative px-4 py-2 rounded-xl text-sm font-semibold text-slate-700 transition-colors hover:text-violet-600 group">
+                <span className="relative z-10">{label}</span>
+                <div className="absolute inset-0 rounded-xl bg-violet-600/5 opacity-0 scale-95 group-hover:opacity-100 group-hover:scale-100 transition-all duration-200" />
+              </Link>
             ))}
           </nav>
 
           {/* Right side */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginLeft: 'auto' }} className="nav-desktop">
-            <Link href="/cart" style={{
-              position: 'relative', display: 'flex', alignItems: 'center', gap: 6,
-              padding: '8px 14px', borderRadius: 10, border: '1px solid #e2e8f0',
-              color: '#475569', textDecoration: 'none', fontSize: '0.88rem', fontWeight: 600,
-              transition: 'all 0.2s',
-            }}>
-              <ShoppingCart size={16} />
+          <div className="hidden md:flex items-center gap-4 relative z-10">
+            <Link href="/cart" className="relative p-2 rounded-xl text-slate-600 hover:text-violet-600 transition-colors bg-white/50 hover:bg-white/80 border border-white/60 shadow-sm">
+              <ShoppingCart size={20} />
               {count > 0 && (
-                <span style={{
-                  position: 'absolute', top: -8, right: -8, minWidth: 20, height: 20,
-                  borderRadius: 10, background: 'linear-gradient(135deg,#7c3aed,#3b82f6)',
-                  color: '#fff', fontSize: '0.7rem', fontWeight: 700,
-                  display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 5px',
-                }}>{count}</span>
+                <span className="absolute -top-1.5 -right-1.5 min-w-[18px] h-[18px] rounded-full bg-gradient-to-br from-violet-600 to-blue-500 text-white text-[10px] font-bold flex items-center justify-center px-1 shadow-md">
+                  {count}
+                </span>
               )}
-              Cart
             </Link>
-            <a href="/#products" className="btn-primary" style={{ padding: '9px 20px', fontSize: '0.88rem' }}>
-              Get Started →
-            </a>
+            <Link href="/products" passHref legacyBehavior>
+              <GlassButton asChild variant="primary" className="py-2.5 px-5 text-sm">
+                <a>Get Started</a>
+              </GlassButton>
+            </Link>
           </div>
 
           {/* Mobile hamburger */}
           <button
-            className="nav-mobile-btn"
+            className="md:hidden relative z-10 p-2 text-slate-800 rounded-lg hover:bg-black/5 transition-colors"
             onClick={() => setOpen(v => !v)}
-            style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 8, marginLeft: 'auto', color: '#0f172a' }}
-            aria-label="Menu">
+            aria-label="Menu"
+          >
             {open ? <X size={24} /> : <Menu size={24} />}
           </button>
         </div>
-      </header>
+      </motion.header>
 
       {/* Mobile menu */}
       <AnimatePresence>
         {open && (
           <motion.div
-            initial={{ opacity: 0, y: -12 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -12 }}
-            transition={{ duration: 0.2 }}
-            style={{
-              position: 'fixed', top: 68, left: 0, right: 0, zIndex: 999,
-              background: '#fff', borderBottom: '1px solid #f1f5f9',
-              boxShadow: '0 8px 30px rgba(0,0,0,0.1)', padding: 20,
-              display: 'flex', flexDirection: 'column', gap: 8,
-            }}>
+            initial={{ opacity: 0, y: -20, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -20, scale: 0.95 }}
+            transition={{ duration: 0.2, ease: "easeOut" }}
+            className="fixed inset-x-4 top-24 z-40 p-6 rounded-3xl glass-panel shadow-2xl md:hidden flex flex-col gap-2"
+          >
             {navLinks.map(({ href, label }) => (
-              <a key={href} href={href} onClick={() => setOpen(false)} style={{
-                padding: '12px 16px', borderRadius: 10, fontSize: '1rem', fontWeight: 600,
-                color: '#475569', textDecoration: 'none', display: 'block',
-              }}>{label}</a>
+              <Link 
+                key={href} 
+                href={href} 
+                onClick={() => setOpen(false)} 
+                className="px-4 py-3 rounded-xl text-base font-semibold text-slate-700 hover:bg-violet-50 hover:text-violet-600 transition-colors"
+              >
+                {label}
+              </Link>
             ))}
-            <Link href="/cart" onClick={() => setOpen(false)} style={{
-              padding: '12px 16px', borderRadius: 10, color: '#7c3aed',
-              fontWeight: 700, textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 8,
-            }}>
-              <ShoppingCart size={16} /> Cart {count > 0 && `(${count})`}
+            <div className="h-px bg-slate-200/50 my-2" />
+            <Link 
+              href="/cart" 
+              onClick={() => setOpen(false)} 
+              className="px-4 py-3 rounded-xl font-semibold text-violet-600 flex items-center gap-3 hover:bg-violet-50 transition-colors"
+            >
+              <ShoppingCart size={20} /> 
+              <span>Cart {count > 0 && `(${count})`}</span>
             </Link>
-            <a href="/#products" onClick={() => setOpen(false)} className="btn-primary" style={{ textAlign: 'center', justifyContent: 'center', marginTop: 8 }}>
-              Get Started →
-            </a>
+            <Link href="/products" onClick={() => setOpen(false)} passHref legacyBehavior>
+              <GlassButton asChild variant="primary" className="w-full mt-4 justify-center">
+                <a>Get Started</a>
+              </GlassButton>
+            </Link>
           </motion.div>
         )}
       </AnimatePresence>
-
-      <style>{`
-        @media (max-width: 768px) {
-          .nav-desktop { display: none !important; }
-        }
-        @media (min-width: 769px) {
-          .nav-mobile-btn { display: none !important; }
-        }
-      `}</style>
     </>
   );
 }

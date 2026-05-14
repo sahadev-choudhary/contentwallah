@@ -1,145 +1,120 @@
 'use client';
+import { motion } from 'framer-motion';
+import { GlassCard } from '@/components/ui/GlassCard';
+import { GlassButton } from '@/components/ui/GlassButton';
+import { Zap, Play, Layers, Sparkles, TrendingUp, Cpu } from 'lucide-react';
 import Link from 'next/link';
-import AnimatedSection from '@/components/ui/AnimatedSection';
-import SectionHeader from '@/components/ui/SectionHeader';
-import GradientText from '@/components/ui/GradientText';
-import { PRODUCT_LIST } from '@/data/products';
-import { CheckCircle2, Zap, ArrowRight, Star } from 'lucide-react';
-import { motion, useMotionValue, useTransform, useSpring } from 'framer-motion';
-import { useRef } from 'react';
-import type { Product } from '@/data/products';
 
-function ProductCard({ product }: { product: Product }) {
-  const cardRef = useRef<HTMLDivElement>(null);
-  const x = useMotionValue(0);
-  const y = useMotionValue(0);
-  const rotateX = useSpring(useTransform(y, [-0.5, 0.5], [5, -5]), { stiffness: 300, damping: 30 });
-  const rotateY = useSpring(useTransform(x, [-0.5, 0.5], [-5, 5]), { stiffness: 300, damping: 30 });
-
-  const onMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!cardRef.current) return;
-    const r = cardRef.current.getBoundingClientRect();
-    x.set((e.clientX - r.left) / r.width - 0.5);
-    y.set((e.clientY - r.top) / r.height - 0.5);
-  };
-
-  const discount = Math.round((1 - product.price / product.oldPrice) * 100);
-  const Icon = product.icon;
-
-  return (
-    <motion.div
-      ref={cardRef}
-      style={{ rotateX, rotateY, transformStyle: 'preserve-3d', perspective: 1000 }}
-      onMouseMove={onMouseMove}
-      onMouseLeave={() => { x.set(0); y.set(0); }}
-    >
-      <div style={{
-        background: '#ffffff',
-        border: product.featured ? '1.5px solid rgba(124,58,237,0.25)' : '1px solid #f1f5f9',
-        borderRadius: 24, padding: 28, position: 'relative', overflow: 'hidden',
-        boxShadow: product.featured
-          ? '0 8px 40px rgba(124,58,237,0.12), 0 2px 8px rgba(0,0,0,0.04)'
-          : '0 2px 12px rgba(0,0,0,0.04)',
-        transition: 'box-shadow 0.3s',
-        display: 'flex', flexDirection: 'column',
-      }}>
-        {/* Featured gradient top stripe */}
-        {product.featured && (
-          <div style={{
-            position: 'absolute', top: 0, left: 0, right: 0, height: 3,
-            background: 'linear-gradient(90deg, #7c3aed, #6366f1, #3b82f6)',
-          }} />
-        )}
-
-        {/* Badge */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 20 }}>
-          <span style={{
-            fontSize: '0.7rem', fontWeight: 700, letterSpacing: '0.06em',
-            textTransform: 'uppercase',
-            color: product.featured ? '#7c3aed' : '#64748b',
-            background: product.featured ? 'rgba(124,58,237,0.08)' : '#f8fafc',
-            border: product.featured ? '1px solid rgba(124,58,237,0.15)' : '1px solid #f1f5f9',
-            borderRadius: 50, padding: '4px 12px',
-          }}>{product.badge}</span>
-          <span style={{
-            fontSize: '0.72rem', fontWeight: 700, color: '#ef4444',
-            background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.15)',
-            borderRadius: 50, padding: '4px 10px',
-          }}>{discount}% OFF</span>
-        </div>
-
-        {/* Icon */}
-        <div style={{
-          width: 52, height: 52, borderRadius: 16, marginBottom: 16,
-          background: `linear-gradient(135deg, ${product.color.includes('violet') ? '#7c3aed' : product.color.includes('blue') ? '#3b82f6' : product.color.includes('purple') ? '#9333ea' : product.color.includes('orange') ? '#f97316' : product.color.includes('emerald') ? '#10b981' : '#ec4899'}, ${product.color.includes('blue') ? '#6366f1' : product.color.includes('violet') ? '#6366f1' : '#7c3aed'})`,
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          boxShadow: '0 4px 16px rgba(124,58,237,0.2)',
-        }}>
-          <Icon size={24} color="#fff" />
-        </div>
-
-        <h3 style={{ fontWeight: 800, fontSize: '1.15rem', color: '#0f172a', marginBottom: 8, letterSpacing: '-0.01em' }}>
-          {product.name}
-        </h3>
-        <p style={{ fontSize: '0.88rem', color: '#64748b', lineHeight: 1.6, marginBottom: 16, flex: 1 }}>
-          {product.tagline}
-        </p>
-
-        {/* Includes preview */}
-        <div style={{ marginBottom: 20, display: 'flex', flexDirection: 'column', gap: 5 }}>
-          {product.includes.slice(0, 3).map(inc => (
-            <span key={inc} style={{ fontSize: '0.8rem', color: '#64748b', display: 'flex', alignItems: 'center', gap: 6 }}>
-              <CheckCircle2 size={12} style={{ color: '#10b981', flexShrink: 0 }} />
-              {inc}
-            </span>
-          ))}
-        </div>
-
-        {/* Price */}
-        <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, marginBottom: 6 }}>
-          <span style={{ fontSize: '2rem', fontWeight: 900, color: '#0f172a', letterSpacing: '-0.03em' }}>
-            ₹{product.price.toLocaleString('en-IN')}
-          </span>
-          <span style={{ fontSize: '0.95rem', color: '#94a3b8', textDecoration: 'line-through' }}>
-            ₹{product.oldPrice.toLocaleString('en-IN')}
-          </span>
-        </div>
-        <div style={{ fontSize: '0.78rem', color: '#10b981', fontWeight: 600, display: 'flex', alignItems: 'center', gap: 5, marginBottom: 20 }}>
-          <Zap size={11} /> Instant digital delivery
-        </div>
-
-        {/* Stars */}
-        <div style={{ display: 'flex', gap: 2, marginBottom: 16 }}>
-          {Array(5).fill(0).map((_, i) => <Star key={i} size={12} style={{ color: '#f59e0b', fill: '#f59e0b' }} />)}
-          <span style={{ fontSize: '0.78rem', color: '#94a3b8', marginLeft: 4 }}>5.0</span>
-        </div>
-
-        {/* CTA */}
-        <Link href={`/product/${product.id}`} className="btn-primary" style={{ textAlign: 'center', justifyContent: 'center', borderRadius: 12 }}>
-          Get Now <ArrowRight size={15} />
-        </Link>
-      </div>
-    </motion.div>
-  );
-}
+const products = [
+  {
+    id: 'viral-creator-system',
+    name: 'Viral Creator System',
+    description: 'AI-powered creator growth operating system. Stop guessing, start growing.',
+    icon: Zap,
+    color: 'from-amber-400 to-orange-500',
+    iconColor: 'text-amber-500',
+    features: ['Viral hooks & structures', 'Reels script frameworks', 'AI prompt engines', 'Creator workflows'],
+    price: '$49',
+  },
+  {
+    id: 'faceless-blueprint',
+    name: 'Faceless Creator Blueprint',
+    description: 'Build automated faceless creator pages using advanced AI systems.',
+    icon: Play,
+    color: 'from-violet-500 to-indigo-500',
+    iconColor: 'text-violet-500',
+    features: ['Faceless niche strategies', 'Automation workflows', 'Video script systems', 'AI monetization'],
+    price: '$79',
+    popular: true,
+  },
+  {
+    id: 'content-engine-pro',
+    name: 'Content Engine Pro',
+    description: 'The complete creator growth ecosystem. Everything you need to scale.',
+    icon: Cpu,
+    color: 'from-blue-500 to-cyan-500',
+    iconColor: 'text-blue-500',
+    features: ['Everything in previous tiers', 'Advanced AI dashboards', 'Scaling systems', '1-on-1 strategy call'],
+    price: '$149',
+  }
+];
 
 export default function ProductsSection() {
   return (
-    <section id="products" style={{ padding: '100px 0', background: '#f8fafc' }}>
-      <div style={{ maxWidth: 1280, margin: '0 auto', padding: '0 24px' }}>
-        <SectionHeader
-          eyebrow="Digital Products"
-          title={<>Creator Kits That<br /><GradientText>Actually Work</GradientText></>}
-          description="Instant download. Start creating better content in the next 60 minutes."
-        />
+    <section id="products" className="max-w-7xl mx-auto px-6 relative">
+      <div className="text-center mb-20">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-violet-100 text-violet-700 font-semibold text-sm mb-6"
+        >
+          <Sparkles size={16} /> Premium Systems
+        </motion.div>
+        <motion.h2
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.1 }}
+          className="text-4xl md:text-5xl font-extrabold text-slate-900 tracking-tight mb-6"
+        >
+          Flagship <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-600 to-blue-500">Creator Systems</span>
+        </motion.h2>
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.2 }}
+          className="text-lg text-slate-600 max-w-2xl mx-auto"
+        >
+          We don't sell templates. We sell operating systems that transform your content workflow using AI.
+        </motion.p>
+      </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 24, perspective: '1200px' }}>
-          {PRODUCT_LIST.map(product => (
-            <AnimatedSection key={product.id}>
-              <ProductCard product={product} />
-            </AnimatedSection>
-          ))}
-        </div>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 relative z-10">
+        {products.map((product, idx) => (
+          <motion.div
+            key={product.id}
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: idx * 0.15 }}
+          >
+            <GlassCard intensity={product.popular ? "heavy" : "light"} className={`h-full flex flex-col p-8 ${product.popular ? 'border-violet-300 ring-4 ring-violet-500/10 scale-105 z-20' : 'border-slate-200/60 hover:border-slate-300'}`}>
+              {product.popular && (
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-gradient-to-r from-violet-600 to-blue-500 text-white px-4 py-1 rounded-full text-xs font-bold uppercase tracking-widest shadow-lg">
+                  Most Popular
+                </div>
+              )}
+              
+              <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${product.color} flex items-center justify-center text-white mb-6 shadow-lg shadow-${product.color.split('-')[1]}-500/30`}>
+                <product.icon size={28} />
+              </div>
+              
+              <h3 className="text-2xl font-bold text-slate-900 mb-3">{product.name}</h3>
+              <p className="text-slate-600 mb-8 text-sm leading-relaxed flex-grow">{product.description}</p>
+              
+              <div className="text-3xl font-extrabold text-slate-900 mb-8">
+                {product.price}
+              </div>
+
+              <ul className="flex flex-col gap-4 mb-8">
+                {product.features.map((feat, i) => (
+                  <li key={i} className="flex items-start gap-3 text-sm font-medium text-slate-700">
+                    <TrendingUp size={16} className={`shrink-0 mt-0.5 ${product.iconColor}`} />
+                    <span>{feat}</span>
+                  </li>
+                ))}
+              </ul>
+
+              <Link href={`/products/${product.id}`} passHref legacyBehavior>
+                <GlassButton asChild variant={product.popular ? 'primary' : 'secondary'} className="w-full mt-auto">
+                  <a>Explore System</a>
+                </GlassButton>
+              </Link>
+            </GlassCard>
+          </motion.div>
+        ))}
       </div>
     </section>
   );
