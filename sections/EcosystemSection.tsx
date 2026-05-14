@@ -1,49 +1,55 @@
-'use client';
-import { motion } from 'framer-motion';
-import { GlassCard } from '@/components/ui/GlassCard';
-import { GlassButton } from '@/components/ui/GlassButton';
-import Link from 'next/link';
-import Image from 'next/image';
+import AnimatedSection from '@/components/ui/AnimatedSection';
+import SectionHeader from '@/components/ui/SectionHeader';
+import GradientText from '@/components/ui/GradientText';
+import { Bot, BarChart3, Users, Zap, Globe, BookOpen } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
+
+const ecosystem: { icon: LucideIcon; title: string; desc: string; badge: string; badgeColor: string }[] = [
+  { icon: Bot,       title: 'AI Creator Tools',      badge: 'Live',        badgeColor: '#10b981', desc: 'AI-powered hooks, scripts, captions, and prompt systems that do the heavy lifting for you.' },
+  { icon: Zap,       title: 'Creator Systems',        badge: 'Live',        badgeColor: '#10b981', desc: 'Complete step-by-step frameworks and playbooks to grow any type of content creator account.' },
+  { icon: BarChart3, title: 'Growth Analytics',       badge: 'Coming Soon', badgeColor: '#f59e0b', desc: 'Track your content performance, identify viral patterns, and optimize your strategy with data.' },
+  { icon: Users,     title: 'Creator Community',      badge: 'Coming Soon', badgeColor: '#f59e0b', desc: 'Exclusive access to a private network of high-performing creators to collaborate and grow together.' },
+  { icon: Globe,     title: 'SaaS Creator Platform',  badge: 'Roadmap',     badgeColor: '#7c3aed', desc: 'A full creator dashboard to manage your content, products, and audience — all in one place.' },
+  { icon: BookOpen,  title: 'Creator Academy',        badge: 'Roadmap',     badgeColor: '#7c3aed', desc: 'In-depth courses and live workshops on AI content creation, monetization, and personal branding.' },
+];
 
 export default function EcosystemSection() {
   return (
-    <section className="max-w-5xl mx-auto px-6 relative text-center">
-      <motion.div
-        initial={{ opacity: 0, scale: 0.95 }}
-        whileInView={{ opacity: 1, scale: 1 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.8 }}
-        className="relative rounded-[3rem] p-12 md:p-20 overflow-hidden bg-gradient-to-b from-slate-900 to-slate-800 border border-slate-700/50 shadow-2xl"
-      >
-        {/* Cinematic glow background */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-violet-600/30 blur-[120px] rounded-full pointer-events-none" />
-        
-        <div className="relative z-10 flex flex-col items-center">
-          <div className="mb-10 opacity-90 drop-shadow-lg">
-            <Image src="/logo-white.svg" alt="ContentWallah" width={240} height={60} className="h-12 w-auto" />
-          </div>
-          
-          <h2 className="text-4xl md:text-6xl font-extrabold text-white tracking-tight mb-8">
-            Build Your Creator Engine.
-          </h2>
-          
-          <p className="text-lg md:text-xl text-slate-300 max-w-2xl mx-auto mb-12 font-medium">
-            Join thousands of creators who have automated their growth, scaled their reach, and built scalable content machines using our premium AI systems.
-          </p>
-          
-          <Link href="/products" passHref legacyBehavior>
-            <GlassButton asChild variant="primary" className="px-12 py-5 text-lg font-bold shadow-2xl shadow-violet-500/30">
-              <a>Start Growing With AI</a>
-            </GlassButton>
-          </Link>
-        </div>
+    <section id="ecosystem" style={{ padding: '100px 0', background: '#fff' }}>
+      <div style={{ maxWidth: 1280, margin: '0 auto', padding: '0 24px' }}>
+        <SectionHeader
+          eyebrow="The Ecosystem"
+          title={<>More Than Products.<br /><GradientText>A Creator Ecosystem.</GradientText></>}
+          description="ContentWallah is building the complete creator economy infrastructure — from tools to community to SaaS."
+        />
 
-        {/* Floating background cards for depth */}
-        <div className="absolute inset-0 pointer-events-none overflow-hidden">
-          <GlassCard intensity="heavy" className="absolute -top-10 -left-10 w-48 h-48 rounded-3xl opacity-20 rotate-12 blur-sm" />
-          <GlassCard intensity="heavy" className="absolute -bottom-10 -right-10 w-64 h-64 rounded-3xl opacity-10 -rotate-12 blur-sm" />
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 20 }}>
+          {ecosystem.map(({ icon: Icon, title, desc, badge, badgeColor }, i) => (
+            <AnimatedSection key={title} delay={i * 0.08}>
+              <div className="card-base" style={{ padding: 28, height: '100%' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 20 }}>
+                  <div style={{
+                    width: 48, height: 48, borderRadius: 14,
+                    background: 'linear-gradient(135deg, #f5f0ff, #f0f7ff)',
+                    border: '1px solid rgba(124,58,237,0.1)',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  }}>
+                    <Icon size={22} style={{ color: '#7c3aed' }} />
+                  </div>
+                  <span style={{
+                    fontSize: '0.68rem', fontWeight: 700, letterSpacing: '0.06em',
+                    textTransform: 'uppercase', padding: '4px 10px',
+                    background: `${badgeColor}12`, color: badgeColor,
+                    border: `1px solid ${badgeColor}25`, borderRadius: 50,
+                  }}>{badge}</span>
+                </div>
+                <h3 style={{ fontWeight: 800, fontSize: '1.05rem', color: '#0f172a', marginBottom: 10 }}>{title}</h3>
+                <p style={{ fontSize: '0.88rem', color: '#64748b', lineHeight: 1.7 }}>{desc}</p>
+              </div>
+            </AnimatedSection>
+          ))}
         </div>
-      </motion.div>
+      </div>
     </section>
   );
 }

@@ -1,84 +1,123 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { Camera, Play, Share2, Send } from 'lucide-react';
-import { GlassButton } from '@/components/ui/GlassButton';
+import { PRODUCT_LIST } from '@/data/products';
 
 export default function Footer() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="bg-slate-50 border-t border-slate-200/60 pt-20 pb-8 text-slate-600">
-      <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12 mb-16">
-        
-        {/* Brand */}
-        <div className="lg:col-span-2">
-          <Link href="/" className="inline-block mb-6">
-            <Image
-              src="/logo.svg"
-              alt="ContentWallah"
-              width={160}
-              height={40}
-              className="h-9 w-auto object-contain"
-            />
-          </Link>
-          <p className="text-sm leading-relaxed mb-8 max-w-sm text-slate-500">
-            The AI Creator Growth System for the modern content economy. Stop guessing. Start growing.
-          </p>
-          <div className="flex gap-3">
-            {[
-              { icon: Camera, label: 'instagram' },
-              { icon: Play,   label: 'youtube'   },
-              { icon: Share2, label: 'twitter'   },
-            ].map(({ icon: Icon, label }) => (
-              <a 
-                key={label} 
-                href="#" 
-                className="w-10 h-10 rounded-xl bg-white border border-slate-200 flex items-center justify-center text-slate-400 hover:text-violet-600 hover:border-violet-200 hover:shadow-sm transition-all"
-                aria-label={label}
-              >
-                <Icon size={18} />
-              </a>
-            ))}
-          </div>
-        </div>
+    <footer style={{ background: '#0f172a', color: '#94a3b8' }}>
+      {/* Main footer */}
+      <div style={{ maxWidth: 1280, margin: '0 auto', padding: '64px 24px 48px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 48 }}>
 
-        {/* Products */}
-        <div>
-          <h4 className="font-bold text-slate-900 mb-6 tracking-tight">Products</h4>
-          <div className="flex flex-col gap-4">
-            <Link href="/products/viral-creator-system" className="text-sm hover:text-violet-600 transition-colors">Viral Creator System</Link>
-            <Link href="/products/faceless-blueprint" className="text-sm hover:text-violet-600 transition-colors">Faceless Blueprint</Link>
-            <Link href="/products/content-engine-pro" className="text-sm hover:text-violet-600 transition-colors">Content Engine Pro</Link>
+          {/* Brand */}
+          <div style={{ gridColumn: 'span 1' }}>
+            <Link href="/" style={{ textDecoration: 'none', display: 'inline-flex', alignItems: 'center', marginBottom: 16 }}>
+              <Image
+                src="/logo-white.svg"
+                alt="ContentWallah"
+                width={180}
+                height={50}
+                style={{ objectFit: 'contain', height: 50, width: 'auto' }}
+              />
+            </Link>
+            <p style={{ fontSize: '0.88rem', lineHeight: 1.7, marginBottom: 24, maxWidth: 240 }}>
+              The AI Creator Growth System for the modern content economy. A Helpverse Initiative.
+            </p>
+            <div style={{ display: 'flex', gap: 10 }}>
+              {[
+                { icon: Camera, label: 'instagram' },
+                { icon: Play,   label: 'youtube'   },
+                { icon: Share2, label: 'twitter'   },
+              ].map(({ icon: Icon, label }) => (
+                <a key={label} href="#" style={{
+                  width: 36, height: 36, borderRadius: 8, background: 'rgba(255,255,255,0.06)',
+                  border: '1px solid rgba(255,255,255,0.08)', display: 'flex', alignItems: 'center',
+                  justifyContent: 'center', color: '#94a3b8', textDecoration: 'none',
+                  transition: 'all 0.2s',
+                }}>
+                  <Icon size={15} />
+                </a>
+              ))}
+            </div>
           </div>
-        </div>
 
-        {/* Company */}
-        <div>
-          <h4 className="font-bold text-slate-900 mb-6 tracking-tight">Company</h4>
-          <div className="flex flex-col gap-4">
-            <Link href="/about" className="text-sm hover:text-violet-600 transition-colors">About Us</Link>
-            <Link href="/contact" className="text-sm hover:text-violet-600 transition-colors">Contact</Link>
-            <Link href="/reviews" className="text-sm hover:text-violet-600 transition-colors">Creator Reviews</Link>
+          {/* Products */}
+          <div>
+            <h4 style={{ color: '#fff', fontWeight: 700, fontSize: '0.9rem', marginBottom: 16 }}>Products</h4>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+              {PRODUCT_LIST.map(p => (
+                <Link key={p.id} href={`/product/${p.id}`} style={{ color: '#64748b', fontSize: '0.88rem', textDecoration: 'none', transition: 'color 0.2s' }}>
+                  {p.name}
+                </Link>
+              ))}
+            </div>
           </div>
-        </div>
 
-        {/* Legal */}
-        <div>
-          <h4 className="font-bold text-slate-900 mb-6 tracking-tight">Legal</h4>
-          <div className="flex flex-col gap-4">
-            <Link href="/privacy" className="text-sm hover:text-violet-600 transition-colors">Privacy Policy</Link>
-            <Link href="/terms" className="text-sm hover:text-violet-600 transition-colors">Terms & Conditions</Link>
+          {/* Company */}
+          <div>
+            <h4 style={{ color: '#fff', fontWeight: 700, fontSize: '0.9rem', marginBottom: 16 }}>Company</h4>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+              {[
+                { label: 'About', href: '/about' },
+                { label: 'Contact', href: '/contact' },
+                { label: 'Blog', href: '#' },
+                { label: 'Affiliate Program', href: '#' },
+              ].map(({ label, href }) => (
+                <Link key={label} href={href} style={{ color: '#64748b', fontSize: '0.88rem', textDecoration: 'none' }}>
+                  {label}
+                </Link>
+              ))}
+            </div>
+          </div>
+
+          {/* Legal */}
+          <div>
+            <h4 style={{ color: '#fff', fontWeight: 700, fontSize: '0.9rem', marginBottom: 16 }}>Legal</h4>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+              {[
+                { label: 'Privacy Policy', href: '/privacy' },
+                { label: 'Terms & Conditions', href: '/terms' },
+                { label: 'Refund Policy', href: '#' },
+              ].map(({ label, href }) => (
+                <Link key={label} href={href} style={{ color: '#64748b', fontSize: '0.88rem', textDecoration: 'none' }}>
+                  {label}
+                </Link>
+              ))}
+            </div>
+          </div>
+
+          {/* Newsletter */}
+          <div>
+            <h4 style={{ color: '#fff', fontWeight: 700, fontSize: '0.9rem', marginBottom: 8 }}>Newsletter</h4>
+            <p style={{ fontSize: '0.85rem', marginBottom: 14, lineHeight: 1.6 }}>
+              Free weekly creator tips &amp; AI prompts.
+            </p>
+            <div style={{ display: 'flex', gap: 8 }}>
+              <input type="email" placeholder="your@email.com" style={{
+                flex: 1, background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)',
+                borderRadius: 10, padding: '10px 14px', color: '#fff', fontSize: '0.85rem',
+                outline: 'none', fontFamily: 'inherit', minWidth: 0,
+              }} />
+              <button style={{
+                background: 'linear-gradient(135deg,#7c3aed,#3b82f6)', border: 'none',
+                borderRadius: 10, padding: '10px 12px', cursor: 'pointer',
+                color: '#fff', display: 'flex', alignItems: 'center',
+              }}>
+                <Send size={15} />
+              </button>
+            </div>
           </div>
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-6 pt-8 border-t border-slate-200/60 flex flex-col md:flex-row items-center justify-between gap-4">
-        <p className="text-xs text-slate-400">
-          © {year} ContentWallah. Built for creators, by creators.
-        </p>
-        <p className="text-xs text-slate-400">
-          A Helpverse Initiative.
-        </p>
+      {/* Bottom bar */}
+      <div style={{ borderTop: '1px solid rgba(255,255,255,0.06)', padding: '20px 24px', textAlign: 'center', fontSize: '0.82rem', color: '#475569' }}>
+        <div style={{ maxWidth: 1280, margin: '0 auto' }}>
+          © {year} ContentWallah — A Helpverse Initiative. Built for creators, by creators. All rights reserved.
+        </div>
       </div>
     </footer>
   );
